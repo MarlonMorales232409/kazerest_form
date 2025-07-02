@@ -47,18 +47,16 @@
     Cargando aplicación...
   </div>
   
-  <!-- Flutter app container -->
-  <div id="flutter-app"></div>
-  
   <script>
     // Debug log para verificar que el script se ejecuta
     console.log('HTML cargado, iniciando Flutter...');
     
-    // Timeout para ocultar loading
+    // Timeout para ocultar loading - Flutter debería ocultarlo automáticamente
     setTimeout(function() {
       var loading = document.getElementById('loading');
-      if (loading) {
-        loading.style.display = 'none';
+      if (loading && loading.style.display !== 'none') {
+        loading.innerHTML = 'La aplicación está tardando en cargar...';
+        loading.style.color = 'orange';
       }
     }, 10000); // 10 segundos timeout
   </script>
