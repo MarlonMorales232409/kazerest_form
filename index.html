@@ -34,6 +34,35 @@
   <!-- <link rel="manifest" href="manifest.json"> -->
 </head>
 <body>
+  <!-- Loading indicator -->
+  <div id="loading" style="
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Arial, sans-serif;
+    color: #666;
+    z-index: 1000;
+  ">
+    Cargando aplicación...
+  </div>
+  
+  <!-- Flutter app container -->
+  <div id="flutter-app"></div>
+  
+  <script>
+    // Debug log para verificar que el script se ejecuta
+    console.log('HTML cargado, iniciando Flutter...');
+    
+    // Timeout para ocultar loading
+    setTimeout(function() {
+      var loading = document.getElementById('loading');
+      if (loading) {
+        loading.style.display = 'none';
+      }
+    }, 10000); // 10 segundos timeout
+  </script>
+  
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

@@ -36,10 +36,39 @@ if (!window._flutter) {
 }
 _flutter.buildConfig = {"engineRevision":"1425e5e9ec5eeb4f225c401d8db69b860e0fde9a","builds":[{"compileTarget":"dart2js","renderer":"canvaskit","mainJsPath":"main.dart.js"}]};
 
+console.log('Flutter bootstrap iniciando...');
+console.log('Build config:', _flutter.buildConfig);
 
 _flutter.loader.load({
   // Deshabilitando Service Worker para evitar errores de cache
   // serviceWorkerSettings: {
   //   serviceWorkerVersion: "3419251907"
   // }
+}).then(function(engineInitializer) {
+  console.log('Flutter loader completado, inicializando engine...');
+  
+  return engineInitializer.initializeEngine({
+    hostElement: document.getElementById('flutter-app')
+  });
+}).then(function(appRunner) {
+  console.log('Flutter engine inicializado, ejecutando app...');
+  
+  // Ocultar loading indicator
+  var loading = document.getElementById('loading');
+  if (loading) {
+    loading.style.display = 'none';
+  }
+  
+  return appRunner.runApp();
+}).then(function() {
+  console.log('Flutter app ejecutándose correctamente');
+}).catch(function(error) {
+  console.error('Error al inicializar Flutter:', error);
+  
+  // Mostrar error en la página
+  var loading = document.getElementById('loading');
+  if (loading) {
+    loading.innerHTML = 'Error al cargar la aplicación: ' + error.message;
+    loading.style.color = 'red';
+  }
 });
