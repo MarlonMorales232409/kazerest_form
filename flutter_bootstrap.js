@@ -39,36 +39,48 @@ _flutter.buildConfig = {"engineRevision":"1425e5e9ec5eeb4f225c401d8db69b860e0fde
 console.log('Flutter bootstrap iniciando...');
 console.log('Build config:', _flutter.buildConfig);
 
+// Usar el método callback en lugar de promesas
 _flutter.loader.load({
   // Deshabilitando Service Worker para evitar errores de cache
   // serviceWorkerSettings: {
   //   serviceWorkerVersion: "3419251907"
   // }
-}).then(function(engineInitializer) {
+}, function(engineInitializer) {
   console.log('Flutter loader completado, inicializando engine...');
+  console.log('Engine initializer:', engineInitializer);
   
-  return engineInitializer.initializeEngine({
+  if (!engineInitializer) {
+    console.error('Engine initializer es undefined');
+    var loading = document.getElementById('loading');
+    if (loading) {
+      loading.innerHTML = 'Error: Engine initializer no disponible';
+      loading.style.color = 'red';
+    }
+    return;
+  }
+  
+  engineInitializer.initializeEngine({
     hostElement: document.getElementById('flutter-app')
+  }).then(function(appRunner) {
+    console.log('Flutter engine inicializado, ejecutando app...');
+    
+    // Ocultar loading indicator
+    var loading = document.getElementById('loading');
+    if (loading) {
+      loading.style.display = 'none';
+    }
+    
+    return appRunner.runApp();
+  }).then(function() {
+    console.log('Flutter app ejecutándose correctamente');
+  }).catch(function(error) {
+    console.error('Error al inicializar engine o ejecutar app:', error);
+    
+    // Mostrar error en la página
+    var loading = document.getElementById('loading');
+    if (loading) {
+      loading.innerHTML = 'Error al inicializar engine: ' + error.message;
+      loading.style.color = 'red';
+    }
   });
-}).then(function(appRunner) {
-  console.log('Flutter engine inicializado, ejecutando app...');
-  
-  // Ocultar loading indicator
-  var loading = document.getElementById('loading');
-  if (loading) {
-    loading.style.display = 'none';
-  }
-  
-  return appRunner.runApp();
-}).then(function() {
-  console.log('Flutter app ejecutándose correctamente');
-}).catch(function(error) {
-  console.error('Error al inicializar Flutter:', error);
-  
-  // Mostrar error en la página
-  var loading = document.getElementById('loading');
-  if (loading) {
-    loading.innerHTML = 'Error al cargar la aplicación: ' + error.message;
-    loading.style.color = 'red';
-  }
 });
