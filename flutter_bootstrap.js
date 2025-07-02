@@ -40,4 +40,23 @@ console.log('Flutter bootstrap iniciando...');
 console.log('Build config:', _flutter.buildConfig);
 
 // Método más simple - dejar que Flutter maneje todo automáticamente
-_flutter.loader.load();
+_flutter.loader.load().then(function(result) {
+  console.log('Flutter loader completado:', result);
+  
+  // Intentar ocultar loading cuando Flutter esté listo
+  setTimeout(function() {
+    var loading = document.getElementById('loading');
+    if (loading) {
+      console.log('Ocultando loading indicator...');
+      loading.style.display = 'none';
+    }
+  }, 2000); // 2 segundos después de que Flutter complete
+}).catch(function(error) {
+  console.error('Error en Flutter loader:', error);
+  
+  var loading = document.getElementById('loading');
+  if (loading) {
+    loading.innerHTML = 'Error al cargar Flutter: ' + (error.message || error);
+    loading.style.color = 'red';
+  }
+});
